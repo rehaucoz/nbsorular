@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etkileşimli Müşteri Soru Akışı (Özet Sayfalı)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .step-card {
+            transition: opacity 0.5s ease-in-out;
+        }
+        .question-box {
+            border-left-width: 4px;
+        }
+        .form-textarea, .form-input, .form-radio, .form-checkbox {
+            border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full;
+        }
+        .form-radio, .form-checkbox {
+            width: auto;
+        }
+        .btn-primary {
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #4338ca;
+        }
+        .btn-secondary {
+            background-color: #6b7280;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        .btn-secondary:hover {
+            background-color: #4b5563;
+        }
+        .rep-note {
+            background-color: #fefce8;
+            border: 1px solid #fde047;
+            color: #713f12;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div id="flow-container" class="max-w-3xl mx-auto p-4 sm:p-6 md:p-8 space-y-8">
+
+        <div id="step-1" class="step-card bg-white p-6 rounded-lg shadow-xl">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">1. Adım: İhtiyaç Analizi ve Hizmet Türünün Belirlenmesi</h2>
+            <p class="mb-6 text-gray-700 leading-relaxed">"Merhaba, [Müşteri Adı/Firma Adı]. Vakit ayırdığınız için teşekkür ederiz..."</p>
+            
+            <div class="question-box p-5 bg-sky-50 rounded-lg border-sky-500">
+                <p class="font-medium text-sky-700 mb-3 text-lg">Temel Soru:</p>
+                <p id="question-text-hizmet-turu" class="mb-4 text-gray-700 leading-relaxed">"Öncelikle, ajansımızdan beklentiniz daha çok <strong>düzenli ve sürekli bir hizmet almak mı</strong> (örneğin aylık sosyal medya yönetimi, sürekli içerik üretimi gibi), <strong>yoksa belirli bir proje özelinde mi</strong> (örneğin bir tanıtım filmi çekimi, kampanya tasarımı gibi) bir iş birliği düşünüyorsunuz?"</p>
+                <input type="hidden" id="hizmet_turu_secimi_input" data-question="Seçilen Hizmet Türü">
+                
+                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-5">
+                    <button type="button" onclick="selectServiceTypeAndNavigate('Düzenli Hizmet', 'step-2a', 'step-1', true)" class="btn-primary w-full sm:w-auto justify-center">Düzenli Hizmet</button>
+                    <button type="button" onclick="selectServiceTypeAndNavigate('Proje Bazlı Hizmet', 'step-2b', 'step-1', true)" class="btn-primary w-full sm:w-auto justify-center">Proje Bazlı Hizmet</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="step-2a" class="step-card hidden bg-white p-6 rounded-lg shadow-xl">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">2. A) Düzenli Hizmet İhtiyacı</h2>
+            <p class="mb-6 text-gray-700 leading-relaxed">"Anlıyorum, düzenli bir hizmet almayı düşünüyorsunuz..."</p>
+            
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-3 text-indigo-700">2.A.1. Mecra ve Kapsam Belirleme</h3>
+                    <div class="question-box p-5 bg-indigo-50 rounded-lg border-indigo-500 mb-4">
+                        <label for="q_2a_1_kanallar" class="font-medium text-indigo-700 mb-2 block">Soru (Kanallar):</label>
+                        <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2a_1_kanallar">"Hangi iletişim kanallarında (örneğin; sosyal medya platformları -Instagram, LinkedIn, YouTube vb.-, web siteniz, e-posta pazarlaması, geleneksel medya, saha etkinlikleri (BTL) vb.) düzenli olarak varlık göstermeyi ve iletişim yapmayı planlıyorsunuz?"</p>
+                        <textarea id="q_2a_1_kanallar" class="form-textarea mt-2" rows="3" placeholder="Yanıtınız..."></textarea>
+                    </div>
+                    <div class="question-box p-5 bg-indigo-50 rounded-lg border-indigo-500 mb-4">
+                        <label for="q_2a_1_icerik" class="font-medium text-indigo-700 mb-2 block">Soru (İçerik Türü/Sıklığı):</label>
+                        <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2a_1_icerik">"Bu kanallarda ne tür ve ne sıklıkta içeriklere ihtiyaç duyuyorsunuz? Örneğin, aylık kaç adet sosyal medya gönderisi, kaç blog yazısı, video içerik, e-bülten gibi adet bazında bir öngörünüz var mı?"</p>
+                        <textarea id="q_2a_1_icerik" class="form-textarea mt-2" rows="3" placeholder="Yanıtınız..."></textarea>
+                    </div>
+                    <div class="question-box p-5 bg-indigo-50 rounded-lg border-indigo-500">
+                        <label for="q_2a_1_hedef_kitle" class="font-medium text-indigo-700 mb-2 block">Soru (Hedef Kitle):</label>
+                        <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2a_1_hedef_kitle">"Belirli bir hedef kitleniz veya ulaşmak istediğiniz özel demografik gruplar var mı? Bu, stratejimizi şekillendirmemize yardımcı olacaktır."</p>
+                        <textarea id="q_2a_1_hedef_kitle" class="form-textarea mt-2" rows="3" placeholder="Yanıtınız..."></textarea>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-3 text-teal-700">2.A.2. Görsel ve Video Materyal Tedariki</h3>
+                    <div class="question-box p-5 bg-teal-50 rounded-lg border-teal-500 mb-4">
+                        <p class="font-medium text-teal-700 mb-2">Soru (Görsel Tedarik):</p>
+                        <p class="text-gray-700 mb-3 leading-relaxed" data-question-for="duzenli_hizmet_gorsel_tedarik_group">"Düzenli iletişiminizde kullanılacak görsel materyalleri (fotoğraflar, videolar, grafik tasarımlar vb.) siz mi temin edeceksiniz, yoksa bu konuda ajansımızdan bir prodüksiyon veya tasarım hizmeti beklentiniz mi var?"</p>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="radio" name="duzenli_hizmet_gorsel_tedarik_group" value="Müşteri Temin Edecek" class="form-radio text-teal-600 focus:ring-teal-500" onchange="toggleElementVisibility('sub-questions-2a2', false)">
+                                <span class="ml-2 text-gray-700">Müşteri Temin Edecek</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="duzenli_hizmet_gorsel_tedarik_group" value="Ajans Üretecek" class="form-radio text-teal-600 focus:ring-teal-500" onchange="toggleElementVisibility('sub-questions-2a2', true)">
+                                <span class="ml-2 text-gray-700">Ajans Üretecek</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div id="sub-questions-2a2" class="hidden ml-0 md:ml-6 pl-0 md:pl-4 md:border-l-2 border-teal-300 space-y-4">
+                        <div class="question-box p-4 bg-teal-50 rounded-lg border-teal-500">
+                            <label for="q_2a_2_uretim_beklenti" class="font-medium text-teal-700 mb-2 block">Alt Soru (Üretim Beklentisi):</label>
+                            <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2a_2_uretim_beklenti">"Görsel ve video üretimlerinde beklentiniz daha çok <strong>geleneksel fotoğraf ve video çekimleri</strong> yönünde mi, yoksa maliyet ve hız avantajı sunabilen, <strong>yapay zeka destekli görsel/video üretim metotlarına</strong> da sıcak bakar mısınız? Bu, hem bütçelendirme hem de çalışma planımız açısından önemli bir detay."</p>
+                            <textarea id="q_2a_2_uretim_beklenti" class="form-textarea mt-2" rows="3" placeholder="Yanıtınız..."></textarea>
+                        </div>
+                        <div class="question-box p-4 bg-teal-50 rounded-lg border-teal-500">
+                            <label for="q_2a_2_gorsel_kimlik" class="font-medium text-teal-700 mb-2 block">Alt Soru (Görsel Kimlik):</label>
+                            <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2a_2_gorsel_kimlik">"Markanızın mevcut bir görsel kimliği, kurumsal renkleri veya özellikle dikkat etmemizi istediğiniz bir görsel stil var mı?"</p>
+                            <textarea id="q_2a_2_gorsel_kimlik" class="form-textarea mt-2" rows="3" placeholder="Yanıtınız..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-3 text-rose-700">2.A.3. Bütçe</h3>
+                    <div class="question-box p-5 bg-rose-50 rounded-lg border-rose-500">
+                        <label for="q_2a_3_butce" class="font-medium text-rose-700 mb-2 block">Soru (Bütçe Aralığı):</label>
+                        <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2a_3_butce">"Bu kapsamdaki düzenli hizmetler için ayırmayı düşündüğünüz aylık veya yıllık bir bütçe aralığı mevcut mu? Bu, size en uygun ve verimli çözümleri önerebilmemiz için bize yol gösterecektir."</p>
+                        <textarea id="q_2a_3_butce" class="form-textarea mt-2" rows="3" placeholder="Yanıtınız..."></textarea>
+                        <div class="mt-4 p-4 rounded-md rep-note">
+                            <p class="font-semibold text-yellow-800">Müşteri Temsilcisi Notu (Müşteri bütçe hakkında fikir sorarsa):</p>
+                            <ul class="list-disc list-inside mt-1 text-sm text-yellow-700 space-y-1">
+                                <li>"Giriş seviyesi sosyal medya... <strong>aylık 80.000 TL</strong>..."</li>
+                                <li>"Daha kapsamlı ihtiyaçlar... <strong>aylık 250.000 TL</strong>..."</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-between mt-8 space-y-3 sm:space-y-0">
+                <button type="button" onclick="navigateToStep('step-1', 'step-2a')" class="btn-secondary w-full sm:w-auto justify-center">Geri</button>
+                <button type="button" onclick="navigateToStep('step-3', 'step-2a')" class="btn-primary w-full sm:w-auto justify-center">İleri (Kapanış)</button>
+            </div>
+        </div>
+
+        <div id="step-2b" class="step-card hidden bg-white p-6 rounded-lg shadow-xl">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">2. B) Proje Bazlı Hizmet İhtiyacı</h2>
+            <p class="mb-6 text-gray-700 leading-relaxed">"Anlıyorum, proje bazlı bir çalışma üzerine konuşacağız..."</p>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-3 text-cyan-700">2.B.1. Proje Detayları</h3>
+                    <div class="question-box p-5 bg-cyan-50 rounded-lg border-cyan-500 mb-4">
+                        <label for="q_2b_1_proje_tur" class="font-medium text-cyan-700 mb-2 block">Soru (Proje Türü):</label>
+                        <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2b_1_proje_tur">"Tam olarak nasıl bir proje için bir aradayız? (Örneğin; kurumsal tanıtım filmi, ürün lansman kampanyası, web sitesi tasarımı, bir etkinlik için kreatif materyal üretimi, fotoğraf çekimi, video prodüksiyonu vb.)"</p>
+                        <textarea id="q_2b_1_proje_tur" class="form-textarea mt-2" rows="3" placeholder="Proje türü ve kısa açıklaması..."></textarea>
+                    </div>
+                    <div class="question-box p-5 bg-cyan-50 rounded-lg border-cyan-500 mb-4">
+                        <label for="q_2b_1_proje_amac" class="font-medium text-cyan-700 mb-2 block">Soru (Proje Amacı):</label>
+                        <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2b_1_proje_amac">"Projenin temel amacı nedir? (Örneğin; marka bilinirliğini artırmak, satışları yükseltmek, yeni bir ürünü tanıtmak vb.)"</p>
+                        <textarea id="q_2b_1_proje_amac" class="form-textarea mt-2" rows="3" placeholder="Yanıtınız..."></textarea>
+                    </div>
+                    <div class="question-box p-5 bg-cyan-50 rounded-lg border-cyan-500 mb-4">
+                        <label for="q_2b_1_kullanim_mecra" class="font-medium text-cyan-700 mb-2 block">Soru (Kullanım Mecrası):</label>
+                        <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2b_1_kullanim_mecra">"Proje kapsamında üretilecek materyaller hangi mecralarda kullanılacak? (Örneğin; televizyon, radyo, sosyal medya, dijital reklamlar, web sitesi, basılı materyaller, fuar stantları vb.)"</p>
+                        <textarea id="q_2b_1_kullanim_mecra" class="form-textarea mt-2" rows="3" placeholder="Yanıtınız..."></textarea>
+                    </div>
+
+                    <div class="p-4 border border-dashed border-gray-300 rounded-lg mt-4">
+                        <p class="font-medium text-gray-600 mb-3">Eğer Proje Fotoğraf Çekimi İçeriyorsa:</p>
+                        <div class="question-box p-5 bg-cyan-50 rounded-lg border-cyan-500 mb-4">
+                            <label for="q_2b_1_foto_tur" class="font-medium text-cyan-700 mb-2 block">Soru (Fotoğraf Türü):</label>
+                            <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2b_1_foto_tur">"Ne tür bir fotoğraf çekimi düşünüyorsunuz? (Örn: Ürün, mekan, portre, imaj vb.)"</p>
+                            <textarea id="q_2b_1_foto_tur" class="form-textarea mt-2" rows="2" placeholder="Yanıtınız..."></textarea>
+                        </div>
+                        <div class="question-box p-5 bg-cyan-50 rounded-lg border-cyan-500 mb-4">
+                            <label for="q_2b_1_foto_adet" class="font-medium text-cyan-700 mb-2 block">Soru (Fotoğraf Adedi):</label>
+                            <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2b_1_foto_adet">"Yaklaşık kaç adet final fotoğraf ihtiyacınız olacak?"</p>
+                            <input type="number" id="q_2b_1_foto_adet" class="form-input mt-2" placeholder="Örn: 20">
+                        </div>
+                        <div class="question-box p-5 bg-cyan-50 rounded-lg border-cyan-500">
+                            <label for="q_2b_1_foto_lokasyon" class="font-medium text-cyan-700 mb-2 block">Soru (Fotoğraf Lokasyon/Konsept):</label>
+                            <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2b_1_foto_lokasyon">"Çekim için özel bir lokasyon veya konsept var mı aklınızda?"</p>
+                            <textarea id="q_2b_1_foto_lokasyon" class="form-textarea mt-2" rows="2" placeholder="Yanıtınız..."></textarea>
+                        </div>
+                    </div>
+
+                     <div class="p-4 border border-dashed border-gray-300 rounded-lg mt-4">
+                        <p class="font-medium text-gray-600 mb-3">Eğer Proje Video Prodüksiyonu İçeriyorsa:</p>
+                        <div class="question-box p-5 bg-cyan-50 rounded-lg border-cyan-500 mb-4">
+                            <label for="q_2b_1_video_tur" class="font-medium text-cyan-700 mb-2 block">Soru (Video Türü):</label>
+                            <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2b_1_video_tur">"Nasıl bir video prodüksiyonu planlıyorsunuz? (Örn: Tanıtım filmi, reklam filmi, sosyal medya videosu, etkinlik videosu vb.)"</p>
+                            <textarea id="q_2b_1_video_tur" class="form-textarea mt-2" rows="2" placeholder="Yanıtınız..."></textarea>
+                        </div>
+                        <div class="question-box p-5 bg-cyan-50 rounded-lg border-cyan-500 mb-4">
+                            <label for="q_2b_1_video_sure" class="font-medium text-cyan-700 mb-2 block">Soru (Video Süreleri):</label>
+                             <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2b_1_video_sure">"Filmlerin ortalama süreleri ne kadar olacak? Kaç adet video üretimi talep ediyorsunuz?"</p>
+                            <input type="text" id="q_2b_1_video_sure" class="form-input mt-2" placeholder="Örn: 30 saniye - 1 dakika">
+                        </div>
+                        <div class="question-box p-5 bg-cyan-50 rounded-lg border-cyan-500 mb-4">
+                            <label for="q_2b_1_video_adet" class="font-medium text-cyan-700 mb-2 block">Soru (Video Adedi):</label>
+                            <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2b_1_video_adet">"Kaç adet farklı video üretimi talep ediyorsunuz?"</p>
+                            <input type="number" id="q_2b_1_video_adet" class="form-input mt-2" placeholder="Örn: 3">
+                        </div>
+                        <div class="question-box p-5 bg-cyan-50 rounded-lg border-cyan-500">
+                            <label for="q_2b_1_video_prod_beklenti" class="font-medium text-cyan-700 mb-2 block">Soru (Prodüksiyon Beklentisi):</label>
+                            <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2b_1_video_prod_beklenti">"Prodüksiyon için özel bir beklentiniz var mı? (Örn: Oyuncu kullanımı, özel mekan, animasyon, drone çekimi vb.)"</p>
+                            <textarea id="q_2b_1_video_prod_beklenti" class="form-textarea mt-2" rows="2" placeholder="Yanıtınız..."></textarea>
+                        </div>
+                    </div>
+                     <div class="question-box p-5 bg-cyan-50 rounded-lg border-cyan-500 mt-4">
+                        <label for="q_2b_1_zaman_cizelgesi" class="font-medium text-cyan-700 mb-2 block">Soru (Zaman Çizelgesi):</label>
+                        <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2b_1_zaman_cizelgesi">"Proje için belirlenmiş bir zaman çizelgesi veya son teslim tarihi var mı?"</p>
+                        <textarea id="q_2b_1_zaman_cizelgesi" class="form-textarea mt-2" rows="2" placeholder="Yanıtınız..."></textarea>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-3 text-purple-700">2.B.2. Bütçe</h3>
+                    <div class="question-box p-5 bg-purple-50 rounded-lg border-purple-500">
+                        <label for="q_2b_2_butce" class="font-medium text-purple-700 mb-2 block">Soru (Proje Bütçe Aralığı):</label>
+                        <p class="text-gray-700 mb-2 leading-relaxed" data-question-for="q_2b_2_butce">"Bu proje için ayırmayı düşündüğünüz yaklaşık bir bütçe aralığı var mı?"</p>
+                        <textarea id="q_2b_2_butce" class="form-textarea mt-2" rows="3" placeholder="Yanıtınız..."></textarea>
+                        <div class="mt-4 p-4 rounded-md rep-note">
+                            <p class="font-semibold text-yellow-800">Müşteri Temsilcisi Notu (Müşteri bütçe hakkında fikir sorarsa):</p>
+                            <ul class="list-disc list-inside mt-1 text-sm text-yellow-700 space-y-1">
+                                <li>"Video prodüksiyonu... <strong>350.000 TL'den başlayabilmektedir.</strong>"</li>
+                                <li>"Fotoğraf prodüksiyonu... <strong>150.000 TL civarından başlamaktadır.</strong>"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row justify-between mt-8 space-y-3 sm:space-y-0">
+                <button type="button" onclick="navigateToStep('step-1', 'step-2b')" class="btn-secondary w-full sm:w-auto justify-center">Geri</button>
+                <button type="button" onclick="navigateToStep('step-3', 'step-2b')" class="btn-primary w-full sm:w-auto justify-center">İleri (Kapanış)</button>
+            </div>
+        </div>
+
+        <div id="step-3" class="step-card hidden bg-white p-6 rounded-lg shadow-xl">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">3. Adım: Kapanış ve Sonraki Adımlar</h2>
+            
+            <div class="text-gray-700 space-y-3 leading-relaxed">
+                <p><strong>Müşteri Temsilcisi Kapanış:</strong></p>
+                <ul class="list-disc list-inside pl-4 space-y-2">
+                    <li>"Verdiğiniz bilgiler için çok teşekkür ederim..."</li>
+                    <li>"Size özel bir ön değerlendirme/teklif hazırlayıp [süre] sizinle paylaşabiliriz."</li>
+                    <li>"Ek olarak sormak istediğiniz...?"</li>
+                    <li>"Bundan sonraki süreçte nasıl ilerlemek istersiniz?"</li>
+                </ul>
+                 <label for="kapanis_ek_notlar" class="font-medium text-gray-700 mb-2 block mt-4" data-question-for="kapanis_ek_notlar">Toplantı Ek Notları (Opsiyonel):</label>
+                 <textarea id="kapanis_ek_notlar" class="form-textarea" rows="4" placeholder="Bu toplantıya özel eklemek istediğiniz notlar..."></textarea>
+            </div>
+
+            <div class="mt-6 p-4 bg-blue-50 border border-blue-300 rounded-lg">
+                <h3 class="text-lg font-semibold text-blue-700 mb-2">Genel Notlar (Müşteri Temsilcisi İçin):</h3>
+                <ul class="list-disc list-inside text-blue-600 text-sm space-y-1">
+                    <li>Toplantı boyunca müşteriyi aktif dinleyin...</li>
+                </ul>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-between items-center mt-8 space-y-3 sm:space-y-0">
+                <button type="button" onclick="goBackFromClosing()" class="btn-secondary w-full sm:w-auto justify-center">Önceki Adıma Geri Dön</button>
+                <button type="button" onclick="generateAndShowSummary()" class="btn-primary w-full sm:w-auto justify-center">Özeti Görüntüle</button>
+            </div>
+        </div>
+
+        <div id="step-summary" class="step-card hidden bg-white p-6 rounded-lg shadow-xl">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Toplantı Özeti</h2>
+            <p class="mb-4 text-gray-700">Aşağıdaki tüm soruları ve yanıtlarını seçip kopyalayabilirsiniz:</p>
+            <textarea id="summary-text" readonly class="form-textarea w-full h-96 p-3 border border-gray-300 rounded-md bg-gray-50 text-sm leading-relaxed"></textarea>
+            <div class="flex flex-col sm:flex-row justify-start mt-6 space-y-3 sm:space-y-0">
+                <button type="button" onclick="goBackFromSummary()" class="btn-secondary w-full sm:w-auto justify-center">Forma Geri Dön</button>
+                <button type="button" onclick="copySummaryToClipboard()" class="btn-primary ml-0 sm:ml-4 mt-3 sm:mt-0 w-full sm:w-auto justify-center">Özeti Panoya Kopyala</button>
+            </div>
+             <div id="copy-status" class="mt-3 text-sm"></div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentStepId = 'step-1';
+        let previousMajorStepId = 'step-1'; 
+        const hizmetTuruInput = document.getElementById('hizmet_turu_secimi_input');
+
+        // Soru metinlerini ve input ID'lerini eşleştirmek için bir yapı
+        // data-question-for="INPUT_ID" attribute'u olan <p> etiketlerinden soru metnini alacağız.
+        // Radio grupları için data-question-for="RADIO_GROUP_NAME" kullanılacak.
+
+        const inputFieldDetails = [
+            // Step 1
+            { id: 'hizmet_turu_secimi_input', questionTextSourceId: 'question-text-hizmet-turu', type: 'hidden' },
+            // Step 2A
+            { id: 'q_2a_1_kanallar', type: 'textarea' },
+            { id: 'q_2a_1_icerik', type: 'textarea' },
+            { id: 'q_2a_1_hedef_kitle', type: 'textarea' },
+            { name: 'duzenli_hizmet_gorsel_tedarik_group', type: 'radio' },
+            { id: 'q_2a_2_uretim_beklenti', type: 'textarea', parentToggleId: 'sub-questions-2a2' },
+            { id: 'q_2a_2_gorsel_kimlik', type: 'textarea', parentToggleId: 'sub-questions-2a2' },
+            { id: 'q_2a_3_butce', type: 'textarea' },
+            // Step 2B
+            { id: 'q_2b_1_proje_tur', type: 'textarea' },
+            { id: 'q_2b_1_proje_amac', type: 'textarea' },
+            { id: 'q_2b_1_kullanim_mecra', type: 'textarea' },
+            { id: 'q_2b_1_foto_tur', type: 'textarea' },
+            { id: 'q_2b_1_foto_adet', type: 'input' },
+            { id: 'q_2b_1_foto_lokasyon', type: 'textarea' },
+            { id: 'q_2b_1_video_tur', type: 'textarea' },
+            { id: 'q_2b_1_video_sure', type: 'input' },
+            { id: 'q_2b_1_video_adet', type: 'input' },
+            { id: 'q_2b_1_video_prod_beklenti', type: 'textarea' },
+            { id: 'q_2b_1_zaman_cizelgesi', type: 'textarea' },
+            { id: 'q_2b_2_butce', type: 'textarea' },
+            // Step 3
+            { id: 'kapanis_ek_notlar', type: 'textarea' }
+        ];
+
+        function getQuestionTextForInput(inputIdOrName, type) {
+            let questionElement;
+            if (type === 'radio') {
+                questionElement = document.querySelector(`p[data-question-for="${inputIdOrName}"]`);
+            } else if (type === 'hidden' && inputIdOrName === 'hizmet_turu_secimi_input') {
+                 questionElement = document.getElementById('question-text-hizmet-turu'); // Özel durum
+            }
+            else {
+                questionElement = document.querySelector(`p[data-question-for="${inputIdOrName}"]`);
+            }
+            
+            if (questionElement) {
+                return questionElement.textContent.replace(/<strong>|<\/strong>/g, '').trim(); // HTML taglarını temizle
+            }
+            // Fallback for labels if data-question-for is not found on p
+            const label = document.querySelector(`label[for="${inputIdOrName}"]`);
+            if (label && label.nextElementSibling && label.nextElementSibling.matches('p.text-gray-700')) {
+                 return label.nextElementSibling.textContent.replace(/<strong>|<\/strong>/g, '').trim();
+            } else if (label) {
+                return label.textContent.replace('Soru:', '').replace(/\(.*\):/, '').trim();
+            }
+            return inputIdOrName; // Soru metni bulunamazsa ID/Name'i döndür
+        }
+
+
+        function showStep(stepId) {
+            document.getElementById(currentStepId).classList.add('hidden');
+            document.getElementById(stepId).classList.remove('hidden');
+            currentStepId = stepId;
+            window.scrollTo(0, 0);
+        }
+
+        function selectServiceTypeAndNavigate(serviceType, nextStepId, currentVisibleStepId, isMajorDecision) {
+            if(hizmetTuruInput) {
+                hizmetTuruInput.value = serviceType;
+            }
+            navigateToStep(nextStepId, currentVisibleStepId, isMajorDecision);
+        }
+
+        function navigateToStep(nextStepId, currentVisibleStepId, isMajorDecision) {
+            const currentElement = document.getElementById(currentVisibleStepId);
+            if (currentElement) {
+                 currentElement.classList.add('hidden');
+            }
+            
+            const nextStepElement = document.getElementById(nextStepId);
+            if (nextStepElement) {
+                nextStepElement.classList.remove('hidden');
+            }
+            
+            currentStepId = nextStepId;
+
+            if (isMajorDecision && currentVisibleStepId === 'step-1') { 
+                // Sadece step-1'den yapılan ana kararlarda previousMajorStepId'yi step-1 olarak tutmuyoruz.
+                // previousMajorStepId, step-2a veya step-2b'ye geri dönmek için kullanılacak.
+            } else if (nextStepId === 'step-3' || nextStepId === 'step-summary') { 
+                 previousMajorStepId = currentVisibleStepId; 
+            }
+            
+            window.scrollTo(0, 0);
+        }
+        
+        function goBackFromClosing() { // Step 3'ten geri
+            let targetStep = hizmetTuruInput.value === 'Düzenli Hizmet' ? 'step-2a' : 'step-2b';
+             if (!hizmetTuruInput.value) targetStep = 'step-1'; // Eğer hizmet türü seçilmemişse (çok olası değil ama)
+            navigateToStep(targetStep, 'step-3', false);
+        }
+
+        function goBackFromSummary() { // Özet sayfasından geri
+            navigateToStep('step-3', 'step-summary', false);
+        }
+
+        function toggleElementVisibility(elementId, show) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                if (show) {
+                    element.classList.remove('hidden');
+                } else {
+                    element.classList.add('hidden');
+                }
+            }
+        }
+
+        function generateAndShowSummary() {
+            let summary = "";
+            const summaryTextArea = document.getElementById('summary-text');
+            
+            inputFieldDetails.forEach(field => {
+                let questionText = "";
+                let value = "";
+                let element;
+
+                if (field.type === 'radio') {
+                    questionText = getQuestionTextForInput(field.name, field.type);
+                    const checkedRadio = document.querySelector(`input[name="${field.name}"]:checked`);
+                    if (checkedRadio) {
+                        value = checkedRadio.value;
+                    }
+                } else {
+                    element = document.getElementById(field.id);
+                    if (element) {
+                        questionText = getQuestionTextForInput(field.id, field.type);
+                        value = element.value.trim();
+                    }
+                }
+
+                // Sadece parentToggleId ile belirtilen gizli bölümlerdeki alanlar görünürse özete ekle
+                if (field.parentToggleId) {
+                    const parentElement = document.getElementById(field.parentToggleId);
+                    if (parentElement && parentElement.classList.contains('hidden')) {
+                        value = ""; // Eğer üst element gizliyse, bu alanı boş say
+                    }
+                }
+
+                if (value) { // Sadece dolu yanıtları veya seçilen hizmet türünü ekle
+                    summary += `Soru: ${questionText}\nYanıt: ${value}\n---------------------------------\n\n`;
+                }
+            });
+
+            if (summaryTextArea) {
+                summaryTextArea.value = summary.trim() ? summary : "Henüz yanıtlanmış bir soru bulunmamaktadır.";
+            }
+            navigateToStep('step-summary', currentStepId, false);
+        }
+
+        function copySummaryToClipboard() {
+            const summaryTextArea = document.getElementById('summary-text');
+            const copyStatus = document.getElementById('copy-status');
+            if (summaryTextArea && navigator.clipboard) {
+                navigator.clipboard.writeText(summaryTextArea.value).then(() => {
+                    if (copyStatus) {
+                        copyStatus.textContent = 'Özet panoya kopyalandı!';
+                        copyStatus.style.color = 'green';
+                        setTimeout(() => { copyStatus.textContent = ''; }, 3000);
+                    }
+                }).catch(err => {
+                    if (copyStatus) {
+                        copyStatus.textContent = 'Kopyalama başarısız: ' + err;
+                        copyStatus.style.color = 'red';
+                         setTimeout(() => { copyStatus.textContent = ''; }, 3000);
+                    }
+                    // Fallback for older browsers or if clipboard API fails
+                    try {
+                        summaryTextArea.select();
+                        document.execCommand('copy');
+                        if (copyStatus) {
+                            copyStatus.textContent = 'Özet panoya kopyalandı! (Fallback)';
+                            copyStatus.style.color = 'green';
+                        }
+                    } catch (e) {
+                         if (copyStatus) copyStatus.textContent = 'Kopyalama başarısız. Lütfen manuel olarak kopyalayın.';
+                    }
+
+                });
+            } else if (summaryTextArea) { // Fallback for browsers without navigator.clipboard
+                 try {
+                    summaryTextArea.select();
+                    summaryTextArea.setSelectionRange(0, 99999); // For mobile devices
+                    document.execCommand('copy');
+                     if (copyStatus) {
+                        copyStatus.textContent = 'Özet panoya kopyalandı! (Fallback)';
+                        copyStatus.style.color = 'green';
+                        setTimeout(() => { copyStatus.textContent = ''; }, 3000);
+                    }
+                } catch (err) {
+                     if (copyStatus) {
+                        copyStatus.textContent = 'Kopyalama başarısız. Lütfen manuel olarak kopyalayın.';
+                        copyStatus.style.color = 'red';
+                        setTimeout(() => { copyStatus.textContent = ''; }, 3000);
+                    }
+                }
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const allSteps = document.querySelectorAll('.step-card');
+            allSteps.forEach(step => {
+                if (step.id !== 'step-1') {
+                    step.classList.add('hidden');
+                } else {
+                    step.classList.remove('hidden');
+                }
+            });
+            currentStepId = 'step-1';
+             // HTML içindeki <p data-question-for="INPUT_ID"> etiketlerinden soru metinlerini topla
+            inputFieldDetails.forEach(field => {
+                if (field.type !== 'radio' && field.type !== 'hidden') {
+                    const pElement = document.querySelector(`p[data-question-for="${field.id}"]`);
+                    if (pElement) {
+                        // field.questionText = pElement.textContent.trim(); // Gerekirse burada dinamik olarak da atanabilir.
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
